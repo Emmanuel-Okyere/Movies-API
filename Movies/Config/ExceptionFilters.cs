@@ -1,0 +1,26 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Movies.Exceptions;
+
+namespace Movies.Config;
+
+public class ExceptionFilters: IExceptionFilter
+{
+    public void OnException(ExceptionContext context)
+    {
+        if (context.Exception is not NotFound404Exception) return;
+        context.Result = new NotFoundObjectResult(context.Exception.Message);
+        context.ExceptionHandled = true;
+    }
+}
+
+public class Duplicate404NotFoundException : IExceptionFilter
+{
+    public void OnException(ExceptionContext context)
+    {
+        if(context.Exception is not Duplicate409Exception) return;
+        context.Result = new ConflictObjectResult(context.Exception.Message);
+        context.ExceptionHandled = true;
+    }
+}
+
