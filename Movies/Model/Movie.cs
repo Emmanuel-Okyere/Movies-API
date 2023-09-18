@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Movies.Enums;
 
 namespace Movies.Model;
-
+[Table(name:"movie")]
 public class Movie
 {
     [Required]
@@ -17,6 +17,7 @@ public class Movie
     public string? Description { get; set; }
     [Required]
     public DateTime ReleasedDate { get; set; }
+    public ICollection<Theatre> Theatres { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

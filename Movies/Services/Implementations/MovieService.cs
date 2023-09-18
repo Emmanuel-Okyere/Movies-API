@@ -64,6 +64,7 @@ public class MovieService:IMovieService
         savedMovie.Title = request.Title;
         savedMovie.ReleasedDate = request.ReleasedDate;
         savedMovie.Genre = request.Genre;
+        savedMovie.UpdatedAt = DateTime.Now;
         return _moviesRepository.update(savedMovie);
     }
 
