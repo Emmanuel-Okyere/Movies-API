@@ -4,8 +4,9 @@ using Movies.Model;
 using Movies.Services;
 
 namespace Movies.Controllers;
+[ApiController]
 [Route("api/v1/[controller]")]
-public class TheatreController: Controller
+public class TheatreController: ControllerBase
 {
     private readonly ITheatreService _theatreService;
 
@@ -13,10 +14,10 @@ public class TheatreController: Controller
     {
         _theatreService = theatreService;
     }
-    [HttpPost]
+    [HttpPost()]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<MessageResponseDTO> CreateTheatre(Theatre theatre)
+    public ActionResult<MessageResponseDTO> CreateTheatre(TheatreRequestDTO theatre)
     {
         return Ok(_theatreService.CreateTheatre(theatre));
     }
@@ -52,7 +53,7 @@ public class TheatreController: Controller
     [HttpPost("{id:int}/add-movie")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public ActionResult AddMovieToTheatre(int id, int movieId)
+    public ActionResult AddMovieToTheatre(int id, [FromBody] AddMovieToTheatreRequestDto movieId)
     {
         return Ok(_theatreService.AddMovieToTheatre(id, movieId));
     }

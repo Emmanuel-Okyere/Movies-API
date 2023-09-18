@@ -5,7 +5,7 @@ namespace Movies.Services.Implementations;
 
 public class TheatreService: ITheatreService
 {
-    public MessageResponseDTO CreateTheatre(Theatre theatre)
+    public MessageResponseDTO CreateTheatre(TheatreRequestDTO theatre)
     {
         throw new NotImplementedException();
     }
@@ -30,7 +30,7 @@ public class TheatreService: ITheatreService
         throw new NotImplementedException();
     }
 
-    public MessageResponseDTO AddMovieToTheatre(int theatreId, int movieId)
+    public MessageResponseDTO AddMovieToTheatre(int theatreId, AddMovieToTheatreRequestDto movieId)
     {
         throw new NotImplementedException();
     }
