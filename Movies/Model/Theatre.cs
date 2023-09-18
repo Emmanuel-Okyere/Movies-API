@@ -7,13 +7,15 @@ public class Theatre
 {
     [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+    [Required]
     public string Name { get; set; }
     [Required]
     public string Location { get; set; }
     [Required]
     public long Capacity { get; set; }
 
-    public ICollection<Movie> Movies { get; set; }
+    public List<Movie> Movies { get; set; } = new();
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

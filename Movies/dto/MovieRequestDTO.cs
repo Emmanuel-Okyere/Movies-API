@@ -3,7 +3,7 @@ using Movies.Enums;
 
 namespace Movies.dto;
 
-public class MovieRequest
+public class MovieRequestDTO
 {
     [Required]
     public string? Title { get; set; }

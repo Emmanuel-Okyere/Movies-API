@@ -12,12 +12,13 @@ public class Movie
     [Required]
     public string? Title { get; set; }
     [Required]
-    public List<MovieCategories>? Genre { get; set; }
+    public List<MovieCategories>? Genre { get; set; }= new();
     [Required]
     public string? Description { get; set; }
     [Required]
     public DateTime ReleasedDate { get; set; }
-    public ICollection<Theatre> Theatres { get; set; }
+
+    public List<Theatre> Theatres { get; set; } = new();
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

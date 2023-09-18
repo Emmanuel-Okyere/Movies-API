@@ -25,7 +25,7 @@ public class MovieService:IMovieService
         return movie;
     }
 
-    public MessageResponseDTO CreateMovie(MovieRequest movie)
+    public MessageResponseDTO CreateMovie(MovieRequestDTO movie)
     {
         var savedMovie = _moviesRepository.GetMovieByName(movie.Title.ToLower());
         if (savedMovie is not null)
@@ -53,17 +53,17 @@ public class MovieService:IMovieService
         return _moviesRepository.GetAllMovies();
     }
 
-    public Movie? UpdateMovie(int id, MovieRequest request)
+    public Movie? UpdateMovie(int id, MovieRequestDTO requestDto)
     {
         var savedMovie = _moviesRepository.GetMovieById(id);
         if (savedMovie == null)
         {
             throw new NotFound404Exception("movie not found");
         }
-        savedMovie.Description = request.Description;
-        savedMovie.Title = request.Title;
-        savedMovie.ReleasedDate = request.ReleasedDate;
-        savedMovie.Genre = request.Genre;
+        savedMovie.Description = requestDto.Description;
+        savedMovie.Title = requestDto.Title;
+        savedMovie.ReleasedDate = requestDto.ReleasedDate;
+        savedMovie.Genre = requestDto.Genre;
         savedMovie.UpdatedAt = DateTime.Now;
         return _moviesRepository.update(savedMovie);
     }

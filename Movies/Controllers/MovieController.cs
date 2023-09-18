@@ -16,7 +16,7 @@ public class MovieController: ControllerBase
         _movieService = movieService;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Movie))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetMovieById(int id)
@@ -25,8 +25,9 @@ public class MovieController: ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<MessageResponseDTO> CreateMovie(MovieRequest movie)
+    public ActionResult<MessageResponseDTO> CreateMovie(MovieRequestDTO movie)
     {
         return Ok(_movieService.CreateMovie(movie));
     }
@@ -38,15 +39,15 @@ public class MovieController: ControllerBase
         return _movieService.GetAllMoviesList();
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult UpdateMovie(int id, MovieRequest request)
+    public IActionResult UpdateMovie(int id, MovieRequestDTO requestDto)
     {
-        return Ok(_movieService.UpdateMovie(id, request));
+        return Ok(_movieService.UpdateMovie(id, requestDto));
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult DeleteMovie(int id)
     {

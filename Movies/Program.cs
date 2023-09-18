@@ -26,6 +26,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<IMoviesRepository, MoviesRepository>();
+builder.Services.AddTransient<ITheatreService, TheatreService>();
+builder.Services.AddScoped<ITheatreRepository, TheatreRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

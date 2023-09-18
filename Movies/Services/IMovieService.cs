@@ -7,8 +7,8 @@ namespace Movies.Services;
 public interface IMovieService
 {
     Movie GetMovieById(int id);
-    MessageResponseDTO CreateMovie(MovieRequest movie);
+    MessageResponseDTO CreateMovie(MovieRequestDTO movie);
     Task<IEnumerable<Movie>> GetAllMoviesList();
-    Movie? UpdateMovie(int id, MovieRequest request);
+    Movie? UpdateMovie(int id, MovieRequestDTO requestDto);
     MessageResponseDTO DeleteMovie(int id);
 }
