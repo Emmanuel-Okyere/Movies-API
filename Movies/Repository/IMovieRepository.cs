@@ -12,5 +12,6 @@ public interface IMoviesRepository
     Movie? GetMovieByName(string name);
     Movie? update(Movie movie);
     void deleteMovie(Movie movie);
+    void saveChanges();
 }
 

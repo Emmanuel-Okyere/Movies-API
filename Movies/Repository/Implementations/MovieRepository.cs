@@ -15,7 +15,9 @@ public class MoviesRepository : IMoviesRepository
 
     public Movie? GetMovieById(int id)
     {
-        return _dataContext.Movies.Find(id);
+        return _dataContext.Movies
+            .Include(t=>t.Theatres)
+            .FirstOrDefault(a=>a.Id==id);
     }
 
     public async Task<IEnumerable<Movie>> GetAllMovies()
@@ -47,5 +49,10 @@ public class MoviesRepository : IMoviesRepository
     {
         _dataContext.Movies.Remove(movie);
         _dataContext.SaveChangesAsync();
+    }
+
+    public void saveChanges()
+    {
+        _dataContext.SaveChanges();
     }
 }

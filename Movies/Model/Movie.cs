@@ -12,6 +12,7 @@ public class Movie
     [Required]
     public string? Title { get; set; }
     [Required]
+    // [JsonConverter(typeof(StringEnumConverter))]
     public List<MovieCategories>? Genre { get; set; }= new();
     [Required]
     public string? Description { get; set; }

@@ -2,18 +2,24 @@ using Microsoft.EntityFrameworkCore;
 using Movies.Config;
 using Movies.Data;
 using Movies.Repository;
+using Movies.Repository.Implementations;
 using Movies.Repository.Implementions;
 using Movies.Services;
 using Movies.Services.Implementations;
+using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new ExceptionFilters());
     options.Filters.Add(new Duplicate404NotFoundException());
+})
+    .AddNewtonsoftJson(option =>
+{
+    option.SerializerSettings.Converters.Add(new StringEnumConverter());
+    option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 //Database Configurations
 builder.Services

@@ -1,6 +1,8 @@
 
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using Movies.dto;
+using Movies.Enums;
 using Movies.Model;
 using Movies.Services;
 
@@ -52,5 +54,17 @@ public class MovieController: ControllerBase
     public IActionResult DeleteMovie(int id)
     {
         return Ok(_movieService.DeleteMovie(id));
+    }
+
+    [HttpGet("genres")]
+    public IEnumerable GetAllGenre()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost("genres")]
+    public MessageResponseDTO AddMovieGenre(MovieCategoryDTO categoryDto)
+    {
+        throw new NotImplementedException();
     }
 }
