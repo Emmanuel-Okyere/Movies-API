@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Movies.Enums;
 
 namespace Movies.dto;
 
@@ -7,8 +6,8 @@ public class MovieRequestDTO
 {
     [Required]
     public string? Title { get; set; }
-    [Required]
-    public List<MovieCategories>? Genre { get; set; }
+
+    [Required] public List<int>? GenreIdsList { get; set; } = new();
     [Required]
     public string? Description { get; set; }
     [Required]

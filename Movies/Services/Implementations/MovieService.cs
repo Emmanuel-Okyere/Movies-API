@@ -8,10 +8,12 @@ namespace Movies.Services.Implementations;
 public class MovieService:IMovieService
 {
     private readonly IMoviesRepository _moviesRepository;
+    private readonly IGenreRepository _genreRepository;
 
-    public MovieService(IMoviesRepository moviesRepository)
+    public MovieService(IMoviesRepository moviesRepository, IGenreRepository genreRepository)
     {
         _moviesRepository = moviesRepository;
+        _genreRepository = genreRepository;
     }
 
     public Movie GetMovieById(int id)
@@ -36,11 +38,19 @@ public class MovieService:IMovieService
         {
             Description = movie.Description,
             Title = movie.Title.ToLower(),
-            ReleasedDate = movie.ReleasedDate,
-            Genre = movie.Genre
+            ReleasedDate = movie.ReleasedDate
         };
+        // List<Genre> genres = new();
+        foreach (var genre in movie.GenreIdsList)
+        {
+            var savedGenre = _genreRepository.GetGenreById(genre);
+            if (savedGenre != null)
+            {
+                newMovie.Genres.Add(savedGenre);
+            }
+        }
+        
         var result = _moviesRepository.AddMovie(newMovie);
-        Console.WriteLine(result);
         return new MessageResponseDTO()
         {
             message = "movie saved",
@@ -60,12 +70,20 @@ public class MovieService:IMovieService
         {
             throw new NotFound404Exception("movie not found");
         }
+        foreach (var genre in requestDto.GenreIdsList)
+        {
+            var savedGenre = _genreRepository.GetGenreById(genre);
+            if (savedGenre != null && !savedMovie.Genres.Contains(savedGenre))
+            {
+                savedMovie.Genres.Add(savedGenre);
+            }
+        }
         savedMovie.Description = requestDto.Description;
         savedMovie.Title = requestDto.Title;
         savedMovie.ReleasedDate = requestDto.ReleasedDate;
-        savedMovie.Genre = requestDto.Genre;
-        savedMovie.UpdatedAt = DateTime.Now;
-        return _moviesRepository.update(savedMovie);
+        savedMovie.UpdatedAt = DateTime.UtcNow;
+        _moviesRepository.saveChanges();
+        return savedMovie;
     }
 
     public MessageResponseDTO DeleteMovie(int id)

@@ -17,12 +17,13 @@ public class MoviesRepository : IMoviesRepository
     {
         return _dataContext.Movies
             .Include(t=>t.Theatres)
+            .Include(t=>t.Genres)
             .FirstOrDefault(a=>a.Id==id);
     }
 
     public async Task<IEnumerable<Movie>> GetAllMovies()
     {
-        var movies = await _dataContext.Movies.ToListAsync();
+        var movies = await _dataContext.Movies.Include(t=>t.Genres).ToListAsync();
         return movies;
     }
 
@@ -36,13 +37,6 @@ public class MoviesRepository : IMoviesRepository
     public Movie? GetMovieByName(string name)
     {
         return _dataContext.Movies.SingleOrDefault(a => a.Title == name);
-    }
-
-    public Movie? update(Movie movie)
-    {
-        var updatedMovie =_dataContext.Movies.Update(movie);
-        _dataContext.SaveChangesAsync();
-        return updatedMovie.Entity;
     }
 
     public void deleteMovie(Movie movie)

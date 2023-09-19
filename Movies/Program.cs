@@ -34,6 +34,8 @@ builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<IMoviesRepository, MoviesRepository>();
 builder.Services.AddTransient<ITheatreService, TheatreService>();
 builder.Services.AddScoped<ITheatreRepository, TheatreRepository>();
+builder.Services.AddTransient<IGenreRepository, GenreRepository>();
+builder.Services.AddTransient<IGenreService, GenreService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

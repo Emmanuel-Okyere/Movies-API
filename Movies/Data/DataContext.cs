@@ -11,6 +11,8 @@ public class DataContext: DbContext
 
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Theatre> Theatres { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Movie>()

@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Movies.Enums;
 
 namespace Movies.Model;
 [Table(name:"movie")]
@@ -12,8 +11,7 @@ public class Movie
     [Required]
     public string? Title { get; set; }
     [Required]
-    // [JsonConverter(typeof(StringEnumConverter))]
-    public List<MovieCategories>? Genre { get; set; }= new();
+    public List<Genre>? Genres { get; set; }= new();
     [Required]
     public string? Description { get; set; }
     [Required]
