@@ -105,6 +105,8 @@ namespace Movies.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<double>("AmountPayable")
                         .HasColumnType("double precision");
 
@@ -118,6 +120,9 @@ namespace Movies.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("MovieShowId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("NumberOfPersons")
                         .HasColumnType("integer");
 
@@ -128,6 +133,8 @@ namespace Movies.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieShowId");
 
                     b.ToTable("movieeventbooking");
                 });
@@ -265,7 +272,7 @@ namespace Movies.Migrations
                 {
                     b.HasOne("Movies.Model.MovieShow", "MovieShow")
                         .WithMany("MovieEventBookings")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("MovieShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

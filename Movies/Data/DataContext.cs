@@ -24,10 +24,11 @@ public class DataContext: DbContext
             .HasForeignKey<Ticket>(t => t.Id)
             .IsRequired(false);
 
-        modelBuilder.Entity<MovieEventBooking>()
-            .HasOne(m => m.MovieShow)
-            .WithMany(t => t.MovieEventBookings)
-            .HasForeignKey(e => e.Id);
+        modelBuilder.Entity<MovieShow>()
+            .HasMany(m => m.MovieEventBookings)
+            .WithOne(t => t.MovieShow)
+            .IsRequired();
+        
     }
     
 }

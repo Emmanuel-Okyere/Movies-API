@@ -17,7 +17,7 @@ public class MovieEventBooking
     [Required]
     public double AmountPayable { get; set; }
     public bool IsPaid { get; set; }
-    public MovieShow? MovieShow;
+    public MovieShow MovieShow { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
