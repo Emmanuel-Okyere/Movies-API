@@ -2,6 +2,7 @@ using Movies.dto;
 using Movies.Exceptions;
 using Movies.Model;
 using Movies.Repository;
+using Movies.Repository.Interfaces;
 
 namespace Movies.Services.Implementations;
 
@@ -16,9 +17,9 @@ public class MovieService:IMovieService
         _genreRepository = genreRepository;
     }
 
-    public Movie GetMovieById(int id)
+    public async Task<Movie> GetMovieById(int id)
     {
-        var movie= _moviesRepository.GetMovieById(id);
+        var movie= await _moviesRepository.GetMovieById(id);
         if (movie == null)
         {
             throw new NotFound404Exception("movie no found");
@@ -27,9 +28,9 @@ public class MovieService:IMovieService
         return movie;
     }
 
-    public MessageResponseDTO CreateMovie(MovieRequestDTO movie)
+    public async Task<MessageResponseDTO> CreateMovie(MovieRequestDTO movie)
     {
-        var savedMovie = _moviesRepository.GetMovieByName(movie.Title.ToLower());
+        var savedMovie = await _moviesRepository.GetMovieByName(movie.Title.ToLower());
         if (savedMovie is not null)
         {
             throw new Duplicate409Exception("movie already created");
@@ -40,39 +41,37 @@ public class MovieService:IMovieService
             Title = movie.Title.ToLower(),
             ReleasedDate = movie.ReleasedDate
         };
-        // List<Genre> genres = new();
         foreach (var genre in movie.GenreIdsList)
         {
-            var savedGenre = _genreRepository.GetGenreById(genre);
+            var savedGenre = await _genreRepository.GetGenreById(genre);
             if (savedGenre != null)
             {
                 newMovie.Genres.Add(savedGenre);
             }
         }
-        
-        var result = _moviesRepository.AddMovie(newMovie);
+        await _moviesRepository.AddMovie(newMovie);
         return new MessageResponseDTO()
         {
             message = "movie saved",
-            status = "succeess"
+            status = "success"
         };
     }
 
-    public Task<IEnumerable<Movie>> GetAllMoviesList()
+    public async Task<IEnumerable<Movie>> GetAllMoviesList()
     {
-        return _moviesRepository.GetAllMovies();
+        return await _moviesRepository.GetAllMovies();
     }
 
-    public Movie? UpdateMovie(int id, MovieRequestDTO requestDto)
+    public async Task<Movie?> UpdateMovie(int id, MovieRequestDTO requestDto)
     {
-        var savedMovie = _moviesRepository.GetMovieById(id);
+        var savedMovie = await _moviesRepository.GetMovieById(id);
         if (savedMovie == null)
         {
             throw new NotFound404Exception("movie not found");
         }
         foreach (var genre in requestDto.GenreIdsList)
         {
-            var savedGenre = _genreRepository.GetGenreById(genre);
+            var savedGenre = await _genreRepository.GetGenreById(genre);
             if (savedGenre != null && !savedMovie.Genres.Contains(savedGenre))
             {
                 savedMovie.Genres.Add(savedGenre);
@@ -82,18 +81,18 @@ public class MovieService:IMovieService
         savedMovie.Title = requestDto.Title;
         savedMovie.ReleasedDate = requestDto.ReleasedDate;
         savedMovie.UpdatedAt = DateTime.UtcNow;
-        _moviesRepository.saveChanges();
+        _moviesRepository.SaveChanges();
         return savedMovie;
     }
 
-    public MessageResponseDTO DeleteMovie(int id)
+    public async Task<MessageResponseDTO> DeleteMovie(int id)
     {
-        var movie =_moviesRepository.GetMovieById(id);
+        var movie = await _moviesRepository.GetMovieById(id);
         if (movie == null)
         {
             throw new NotFound404Exception("movie not found");
         }
-        _moviesRepository.deleteMovie(movie);
+        _moviesRepository.DeleteMovie(movie);
         return new MessageResponseDTO()
         {
             message = "movie deleted successfully",

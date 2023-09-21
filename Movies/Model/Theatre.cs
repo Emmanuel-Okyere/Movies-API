@@ -15,7 +15,6 @@ public class Theatre
     public long Capacity { get; set; }
 
     public List<Movie> Movies { get; set; } = new();
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
 }

@@ -2,6 +2,7 @@ using Movies.dto;
 using Movies.Exceptions;
 using Movies.Model;
 using Movies.Repository;
+using Movies.Repository.Interfaces;
 
 namespace Movies.Services.Implementations;
 
@@ -14,9 +15,9 @@ public class GenreService: IGenreService
         _repository = repository;
     }
 
-    public MessageResponseDTO AddGenre(GenreRequestDTO requestDto)
+    public async Task<MessageResponseDTO> AddGenre(GenreRequestDTO requestDto)
     {
-        if (_repository.GetGenreByName(requestDto.Name.ToLower()) != null)
+        if (await _repository.GetGenreByName(requestDto.Name.ToLower()) != null)
         {
             throw new Duplicate409Exception("genre already added");
         }
@@ -25,7 +26,7 @@ public class GenreService: IGenreService
         {
             Name = requestDto.Name.ToLower()
         };
-        _repository.AddGenre(genre);
+        await _repository.AddGenre(genre);
         return new MessageResponseDTO
         {
             message = "genre added successfully",
@@ -33,9 +34,9 @@ public class GenreService: IGenreService
         };
     }
 
-    public MessageResponseDTO UpdateGenre(int id, GenreRequestDTO requestDto)
+    public async Task<MessageResponseDTO> UpdateGenre(int id, GenreRequestDTO requestDto)
     {
-        var genre = _repository.GetGenreById(id);
+        var genre = await _repository.GetGenreById(id);
         if (genre == null)
         {
             throw new NotFound404Exception("genre not found");
@@ -43,13 +44,14 @@ public class GenreService: IGenreService
 
         if (!genre.Name.Equals(requestDto.Name.ToLower()))
         {
-            var alreadySavedGenre = _repository.GetGenreByName(requestDto.Name.ToLower());
+            var alreadySavedGenre = await _repository.GetGenreByName(requestDto.Name.ToLower());
             if (alreadySavedGenre != null)
             {
                 throw new Duplicate409Exception("genre already saved with that name");
             }
 
-            _repository.UpdateGenre(genre);
+            genre.Name = requestDto.Name;
+            _repository.SaveChanges();
         }
 
         return new MessageResponseDTO
@@ -59,14 +61,14 @@ public class GenreService: IGenreService
         };
     }
 
-    public Task<IEnumerable<Genre>> GetAllGenre()
+    public async Task<IEnumerable<Genre>> GetAllGenre()
     {
-        return _repository.GetAllGenre();
+        return await _repository.GetAllGenre();
     }
 
-    public MessageResponseDTO DeleteGenre(int id)
+    public async Task<MessageResponseDTO> DeleteGenre(int id)
     {
-        var genre = _repository.GetGenreById(id);
+        var genre = await _repository.GetGenreById(id);
         if (genre == null)
         {
             throw new NotFound404Exception("genre not found");
@@ -79,20 +81,18 @@ public class GenreService: IGenreService
         };
     }
 
-    public MessageResponseDTO AddBulkGenre(GenreBulkRequest genreBulkRequest)
+    public async Task<MessageResponseDTO> AddBulkGenre(GenreBulkRequest genreBulkRequest)
     {
         foreach (var genre in genreBulkRequest.Genres)
         {
-            var savedGenre = _repository.GetGenreByName(genre.ToLower());
+            var savedGenre = await _repository.GetGenreByName(genre.ToLower());
             if (savedGenre != null) continue;
             var newGenre = new Genre
             {
                 Name = genre.ToLower()
             };
-            _repository.AddGenre(newGenre);
-
+            await _repository.AddGenre(newGenre);
         }
-
         return new MessageResponseDTO
         {
             message = "bulk genre add success",

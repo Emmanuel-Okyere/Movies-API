@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Movies.dto;
 using Movies.Model;
 using Movies.Services;
+using Movies.Services.Interfaces;
 
 namespace Movies.Controllers;
 [ApiController]

@@ -2,22 +2,22 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Movies.Model;
-[Table(name:"movie")]
-public class Movie
+[Table(name:"ticket")]
+public class Ticket
 {
     [Required]
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     [Required]
-    public string? Title { get; set; }
+    public double TicketPrice { get; set; }
     [Required]
-    public List<Genre>? Genres { get; set; }= new();
+    public int TotalTicketsAvailable { get; set; }
     [Required]
-    public string? Description { get; set; }
+    public int NumberOfTicketsSold { get; set; }
+    [NotMapped]
+    public int NumberOfTicketsLeft => TotalTicketsAvailable - NumberOfTicketsSold;
     [Required]
-    public DateTime ReleasedDate { get; set; }
-
-    public List<Theatre> Theatres { get; set; } = new();
+    public MovieShow? MovieShow { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
 }

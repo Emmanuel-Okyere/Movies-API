@@ -6,11 +6,11 @@ namespace Movies.Repository;
 
 public interface IMoviesRepository
 {
-    Movie? GetMovieById(int id);
+    Task<Movie?> GetMovieById(int id);
     Task<IEnumerable<Movie>> GetAllMovies();
-    int AddMovie(Movie movie);
-    Movie? GetMovieByName(string name);
-    void deleteMovie(Movie movie);
-    void saveChanges();
+    Task<Movie> AddMovie(Movie movie);
+    Task<Movie?> GetMovieByName(string name);
+    void DeleteMovie(Movie movie);
+    void SaveChanges();
 }
 

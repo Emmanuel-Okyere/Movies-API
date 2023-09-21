@@ -2,6 +2,8 @@ using Movies.dto;
 using Movies.Exceptions;
 using Movies.Model;
 using Movies.Repository;
+using Movies.Repository.Interfaces;
+using Movies.Services.Interfaces;
 
 namespace Movies.Services.Implementations;
 
@@ -16,9 +18,9 @@ public class TheatreService: ITheatreService
         _moviesRepository = moviesRepository;
     }
 
-    public MessageResponseDTO CreateTheatre(TheatreRequestDTO theatre)
+    public async Task<MessageResponseDTO> CreateTheatre(TheatreRequestDTO theatre)
     {
-        var savedTheatre = _theatreRepository
+        var savedTheatre = await _theatreRepository
             .GetTheatreByNameAndLocation(theatre.Name.ToLower(), theatre.Location.ToLower());
         if (savedTheatre != null)
         {
@@ -31,7 +33,7 @@ public class TheatreService: ITheatreService
             Capacity = theatre.Capacity,
             Location = theatre.Location.ToLower()
         };
-        _theatreRepository.AddTheatre(newTheatre);
+        await _theatreRepository.AddTheatre(newTheatre);
         return new MessageResponseDTO()
         {
             message = "theatre save success",
@@ -39,9 +41,9 @@ public class TheatreService: ITheatreService
         };
     }
 
-    public Theatre GetTheatreById(int id)
+    public async Task<Theatre> GetTheatreById(int id)
     {
-        var theatre = _theatreRepository.GetTheatreById(id);
+        var theatre = await _theatreRepository.GetTheatreById(id);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
@@ -50,9 +52,9 @@ public class TheatreService: ITheatreService
         return theatre;
     }
 
-    public Theatre UpdateTheatre(int id, TheatreRequestDTO theatreRequestDto)
+    public async Task<Theatre> UpdateTheatre(int id, TheatreRequestDTO theatreRequestDto)
     {
-        var savedTheatre = _theatreRepository.GetTheatreById(id);
+        var savedTheatre = await _theatreRepository.GetTheatreById(id);
         if (savedTheatre == null)
         {
             throw new NotFound404Exception("theatre not found");
@@ -61,13 +63,13 @@ public class TheatreService: ITheatreService
         savedTheatre.Capacity = theatreRequestDto.Capacity;
         savedTheatre.Location = theatreRequestDto.Location;
         savedTheatre.Name = theatreRequestDto.Name;
-        var theatre = _theatreRepository.UpdateTheatre(savedTheatre);
-        return theatre;
+        _theatreRepository.SaveChanges();
+        return savedTheatre;
     }
 
-    public MessageResponseDTO DeletedTheatreById(int id)
+    public async Task<MessageResponseDTO> DeletedTheatreById(int id)
     {
-        var theatre = _theatreRepository.GetTheatreById(id);
+        var theatre = await _theatreRepository.GetTheatreById(id);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
@@ -80,20 +82,20 @@ public class TheatreService: ITheatreService
         };
     }
 
-    public IEnumerable<Theatre> GetAllTheatres()
+    public async Task<IEnumerable<Theatre>> GetAllTheatres()
     {
-        return _theatreRepository.GetAllTheatres().Result;
+        return await _theatreRepository.GetAllTheatres();
     }
 
-    public MessageResponseDTO AddMovieToTheatre(int theatreId, AddMovieToTheatreRequestDto movieId)
+    public async Task<MessageResponseDTO> AddMovieToTheatre(int theatreId, AddMovieToTheatreRequestDto movieId)
     {
-        var theatre = _theatreRepository.GetTheatreById(theatreId);
+        var theatre = await _theatreRepository.GetTheatreById(theatreId);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
         }
 
-        var movie = _moviesRepository.GetMovieById(movieId.MovieId);
+        var movie = await _moviesRepository.GetMovieById(movieId.MovieId);
         if (movie == null)
         {
             throw new NotFound404Exception("movie not found");
@@ -106,7 +108,7 @@ public class TheatreService: ITheatreService
         theatre.Movies.Add(movie);
         movie.Theatres.Add(theatre);
         _theatreRepository.SaveChanges();
-        _moviesRepository.saveChanges();
+        _moviesRepository.SaveChanges();
         return new MessageResponseDTO
         {
             message = "movie add to theatre success",
@@ -114,21 +116,21 @@ public class TheatreService: ITheatreService
         };
     }
 
-    public MessageResponseDTO AddBulkMovieToTheatre(int theatreId, List<int> movieIds)
+    public async Task<MessageResponseDTO> AddBulkMovieToTheatre(int theatreId, List<int> movieIds)
     {
-        var theatre = _theatreRepository.GetTheatreById(theatreId);
+        var theatre = await _theatreRepository.GetTheatreById(theatreId);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
         }
         foreach (var movieId in movieIds)
         {
-            var movie = _moviesRepository.GetMovieById(movieId);
+            var movie =await _moviesRepository.GetMovieById(movieId);
             if (movie != null && !theatre.Movies.Contains(movie))
             {
                 theatre.Movies.Add(movie);
                 movie.Theatres.Add(theatre);
-                _moviesRepository.saveChanges();
+                _moviesRepository.SaveChanges();
                 _theatreRepository.SaveChanges();
             }
         }
@@ -139,9 +141,9 @@ public class TheatreService: ITheatreService
         };
     }
 
-    public IEnumerable<Movie> GetAllMoviesInATheatre(int id)
+    public async Task<IEnumerable<Movie>> GetAllMoviesInATheatre(int id)
     {
-        var theatre = _theatreRepository.GetTheatreById(id);
+        var theatre = await _theatreRepository.GetTheatreById(id);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
@@ -150,15 +152,15 @@ public class TheatreService: ITheatreService
         return theatre.Movies;
     }
 
-    public MessageResponseDTO DeleteMovieFromTheatre(int theatreId, int movieId)
+    public async Task<MessageResponseDTO> DeleteMovieFromTheatre(int theatreId, int movieId)
     {
-        var theatre = _theatreRepository.GetTheatreById(theatreId);
+        var theatre = await _theatreRepository.GetTheatreById(theatreId);
         if (theatre == null)
         {
             throw new NotFound404Exception("theatre not found");
         }
 
-        var movie = _moviesRepository.GetMovieById(movieId);
+        var movie = await _moviesRepository.GetMovieById(movieId);
         if (movie == null)
         {
             throw new NotFound404Exception("movie not found");
@@ -171,7 +173,7 @@ public class TheatreService: ITheatreService
 
         theatre.Movies.Remove(movie);
         movie.Theatres.Remove(theatre);
-        _moviesRepository.saveChanges();
+        _moviesRepository.SaveChanges();
         _theatreRepository.SaveChanges();
         return new MessageResponseDTO()
         {

@@ -3,9 +3,10 @@ using Movies.Config;
 using Movies.Data;
 using Movies.Repository;
 using Movies.Repository.Implementations;
-using Movies.Repository.Implementions;
+using Movies.Repository.Interfaces;
 using Movies.Services;
 using Movies.Services.Implementations;
+using Movies.Services.Interfaces;
 using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,9 @@ builder.Services.AddTransient<ITheatreService, TheatreService>();
 builder.Services.AddScoped<ITheatreRepository, TheatreRepository>();
 builder.Services.AddTransient<IGenreRepository, GenreRepository>();
 builder.Services.AddTransient<IGenreService, GenreService>();
+builder.Services.AddTransient<IMovieShowService, MovieShowService>();
+builder.Services.AddTransient<IMovieShowRepository, MovieShowRepository>();
+builder.Services.AddTransient<ITicketRepository, TicketRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Model;
+using Movies.Repository.Interfaces;
 
 namespace Movies.Repository.Implementations;
 
@@ -13,28 +14,21 @@ public class GenreRepository: IGenreRepository
         _context = context;
     }
 
-    public Genre? AddGenre(Genre genre)
+    public async Task<Genre?> AddGenre(Genre genre)
     {
-        var savedGenre = _context.Genres.Add(genre);
-        _context.SaveChanges();
+         var savedGenre =await _context.Genres.AddAsync(genre);
+         await _context.SaveChangesAsync();
         return savedGenre.Entity;
     }
-
-    public Genre? UpdateGenre(Genre genre)
+    
+    public async Task<Genre?> GetGenreById(int id)
     {
-        var updatedGenre = _context.Update(genre);
-        _context.SaveChangesAsync();
-        return updatedGenre.Entity;
+        return await _context.Genres.FindAsync(id);
     }
 
-    public Genre? GetGenreById(int id)
+    public async Task<Genre?> GetGenreByName(string name)
     {
-        return _context.Genres.Find(id);
-    }
-
-    public Genre? GetGenreByName(string name)
-    {
-        var savedGenre = _context.Genres.FirstOrDefault(t => t.Name == name);
+        var savedGenre =await _context.Genres.FirstOrDefaultAsync(t => t.Name == name);
         return savedGenre;
     }
 
@@ -51,6 +45,6 @@ public class GenreRepository: IGenreRepository
 
     public void SaveChanges()
     {
-        _context.SaveChanges();
+        _context.SaveChangesAsync();
     }
 }

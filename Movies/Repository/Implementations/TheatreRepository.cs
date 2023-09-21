@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Model;
+using Movies.Repository.Interfaces;
 
 namespace Movies.Repository.Implementations;
 
@@ -12,15 +13,17 @@ public class TheatreRepository : ITheatreRepository
     {
         _dataContext = dataContext;
     }
-    public Theatre? GetTheatreById(int id)
+    public async Task<Theatre?> GetTheatreById(int id)
     {
-        return _dataContext.Theatres.Include(t=>t.Movies).FirstOrDefault(t=>t.Id==id);
+        return await _dataContext.Theatres
+            .Include(t=>t.Movies)
+            .FirstOrDefaultAsync(t=>t.Id==id);
     }
 
-    public Theatre AddTheatre(Theatre theatre)
+    public async Task<Theatre> AddTheatre(Theatre theatre)
     {
-        var savedTheatre =_dataContext.Theatres.Add(theatre);
-        _dataContext.SaveChangesAsync();
+        var savedTheatre =await _dataContext.Theatres.AddAsync(theatre);
+        await _dataContext.SaveChangesAsync();
         return savedTheatre.Entity;
     }
 
@@ -29,40 +32,22 @@ public class TheatreRepository : ITheatreRepository
         return await _dataContext.Theatres.ToListAsync();
     }
 
-    // public IEnumerable<Movie> GetAllMoviesInATheatre(Theatre theatre)
-    // {
-    //     return theatre.Movies;
-    // }
-
-    public async void DeleteTheatre(Theatre theatre)
+    public void DeleteTheatre(Theatre theatre)
     {
         _dataContext.Theatres.Remove(theatre);
-        await _dataContext.SaveChangesAsync();
+        _dataContext.SaveChangesAsync();
     }
-
-    public Theatre UpdateTheatre(Theatre theatre)
+    
+    public async Task<Theatre?> GetTheatreByNameAndLocation(string name, string location)
     {
-        var updatedTheatre = _dataContext.Theatres.Update(theatre);
-        _dataContext.SaveChanges();
-        return updatedTheatre.Entity;
-    }
-
-    public int AddMovieToTheatre(Theatre theatre,Movie movie)
-    {
-        theatre.Movies.Add(movie);
-        var status =_dataContext.SaveChanges();
-        return status;
-    }
-
-    public Theatre? GetTheatreByNameAndLocation(string name, string location)
-    {
-        var theatre = _dataContext.Theatres.SingleOrDefault(a => a.Name == name && a.Location == location);
+        var theatre = await _dataContext.Theatres
+            .SingleOrDefaultAsync(a => a.Name == name && a.Location == location);
         return theatre;
     }
 
     public void SaveChanges()
     {
-        _dataContext.SaveChanges();
+        _dataContext.SaveChangesAsync();
     }
     
 }

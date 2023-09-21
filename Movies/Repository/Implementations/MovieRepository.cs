@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Movies.Data;
 using Movies.Model;
 
-namespace Movies.Repository.Implementions;
+namespace Movies.Repository.Implementations;
 
 public class MoviesRepository : IMoviesRepository
 {
@@ -13,40 +13,43 @@ public class MoviesRepository : IMoviesRepository
         _dataContext = context;
     }
 
-    public Movie? GetMovieById(int id)
+    public async Task<Movie?> GetMovieById(int id)
     {
-        return _dataContext.Movies
+        return await _dataContext.Movies
             .Include(t=>t.Theatres)
             .Include(t=>t.Genres)
-            .FirstOrDefault(a=>a.Id==id);
+            .FirstOrDefaultAsync(a=>a.Id==id);
     }
 
     public async Task<IEnumerable<Movie>> GetAllMovies()
     {
-        var movies = await _dataContext.Movies.Include(t=>t.Genres).ToListAsync();
+        var movies = await _dataContext.Movies
+            .Include(t=>t.Genres)
+            .ToListAsync();
         return movies;
     }
 
-    public int AddMovie(Movie movie)
+    public async Task<Movie> AddMovie(Movie movie)
     {
-        _dataContext.Movies.Add(movie);
-        var savedMovie = _dataContext.SaveChanges();
-        return savedMovie;
+        var savedMovie = await _dataContext.Movies.AddAsync(movie);
+        await _dataContext.SaveChangesAsync();
+        return savedMovie.Entity;
     }
 
-    public Movie? GetMovieByName(string name)
+    public async Task<Movie?> GetMovieByName(string name)
     {
-        return _dataContext.Movies.SingleOrDefault(a => a.Title == name);
+        return await _dataContext.Movies
+            .SingleOrDefaultAsync(a => a.Title == name);
     }
 
-    public void deleteMovie(Movie movie)
+    public void DeleteMovie(Movie movie)
     {
         _dataContext.Movies.Remove(movie);
         _dataContext.SaveChangesAsync();
     }
 
-    public void saveChanges()
+    public void SaveChanges()
     {
-        _dataContext.SaveChanges();
+        _dataContext.SaveChangesAsync();
     }
 }

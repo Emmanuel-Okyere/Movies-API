@@ -17,40 +17,40 @@ public class GenreController: ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<IEnumerable<Genre>> GetAllGenres()
+    public async Task<IActionResult> GetAllGenres()
     {
-        return _genreService.GetAllGenre();
+        return  Ok(await _genreService.GetAllGenre());
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public ActionResult AddGenre([FromBody] GenreRequestDTO genreRequestDto)
+    public async Task<ActionResult> AddGenre([FromBody] GenreRequestDTO genreRequestDto)
     {
-        return Ok(_genreService.AddGenre(genreRequestDto));
+        return Ok(await _genreService.AddGenre(genreRequestDto));
     }
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public ActionResult UpdateGenre(int id, [FromBody] GenreRequestDTO genreRequestDto)
+    public async Task<ActionResult> UpdateGenre(int id, [FromBody] GenreRequestDTO genreRequestDto)
     {
-        return Ok(_genreService.UpdateGenre(id, genreRequestDto));
+        return Ok(await _genreService.UpdateGenre(id, genreRequestDto));
     }
 
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult DeleteGenre(int id)
+    public async Task<ActionResult> DeleteGenre(int id)
     {
-        return Ok(_genreService.DeleteGenre(id));
+        return Ok(await _genreService.DeleteGenre(id));
     }
 
     [HttpPost("bulk")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult AddBulkGenre(GenreBulkRequest genreBulkRequest)
+    public async Task<ActionResult> AddBulkGenre(GenreBulkRequest genreBulkRequest)
     {
-        return Ok(_genreService.AddBulkGenre(genreBulkRequest));
+        return Ok(await _genreService.AddBulkGenre(genreBulkRequest));
     }
 }

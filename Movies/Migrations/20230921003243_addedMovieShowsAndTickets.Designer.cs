@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movies.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movies.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230921003243_addedMovieShowsAndTickets")]
+    partial class addedMovieShowsAndTickets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,7 +81,9 @@ namespace Movies.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("current_timestamp");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -108,6 +113,7 @@ namespace Movies.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("EndTimeOfShow")
@@ -154,7 +160,9 @@ namespace Movies.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("current_timestamp");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -178,8 +186,13 @@ namespace Movies.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MovieShowId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("NumberOfTicketsSold")
                         .HasColumnType("integer");
@@ -194,6 +207,8 @@ namespace Movies.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieShowId");
 
                     b.ToTable("ticket");
                 });
@@ -250,16 +265,12 @@ namespace Movies.Migrations
             modelBuilder.Entity("Movies.Model.Ticket", b =>
                 {
                     b.HasOne("Movies.Model.MovieShow", "MovieShow")
-                        .WithOne("Tickets")
-                        .HasForeignKey("Movies.Model.Ticket", "Id");
+                        .WithMany()
+                        .HasForeignKey("MovieShowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MovieShow");
-                });
-
-            modelBuilder.Entity("Movies.Model.MovieShow", b =>
-                {
-                    b.Navigation("Tickets")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
