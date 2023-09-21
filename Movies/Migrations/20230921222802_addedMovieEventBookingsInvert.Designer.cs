@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movies.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movies.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230921222802_addedMovieEventBookingsInvert")]
+    partial class addedMovieEventBookingsInvert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,6 +108,8 @@ namespace Movies.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<double>("AmountPayable")
                         .HasColumnType("double precision");
 
@@ -118,6 +123,9 @@ namespace Movies.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("MovieShowId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("NumberOfPersons")
                         .HasColumnType("integer");
 
@@ -128,6 +136,8 @@ namespace Movies.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieShowId");
 
                     b.ToTable("movieeventbooking");
                 });
@@ -263,13 +273,9 @@ namespace Movies.Migrations
 
             modelBuilder.Entity("Movies.Model.MovieEventBooking", b =>
                 {
-                    b.HasOne("Movies.Model.MovieShow", "MovieShow")
+                    b.HasOne("Movies.Model.MovieShow", null)
                         .WithMany("MovieEventBookings")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MovieShow");
+                        .HasForeignKey("MovieShowId");
                 });
 
             modelBuilder.Entity("Movies.Model.MovieShow", b =>

@@ -14,6 +14,7 @@ public class DataContext: DbContext
     public DbSet<Genre> Genres { get; set; }
     public DbSet<MovieShow?> MovieShows { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<MovieEventBooking> MovieEventBookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,11 @@ public class DataContext: DbContext
             .WithOne(t => t.MovieShow)
             .HasForeignKey<Ticket>(t => t.Id)
             .IsRequired(false);
+
+        modelBuilder.Entity<MovieEventBooking>()
+            .HasOne(m => m.MovieShow)
+            .WithMany(t => t.MovieEventBookings)
+            .HasForeignKey(e => e.Id);
     }
     
 }

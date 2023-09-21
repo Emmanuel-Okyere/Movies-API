@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Movies.Config;
 using Movies.Data;
+using Movies.Model;
 using Movies.Repository;
 using Movies.Repository.Implementations;
 using Movies.Repository.Interfaces;
@@ -40,6 +41,9 @@ builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IMovieShowService, MovieShowService>();
 builder.Services.AddTransient<IMovieShowRepository, MovieShowRepository>();
 builder.Services.AddTransient<ITicketRepository, TicketRepository>();
+builder.Services.AddTransient<IMovieEventBookingService, MovieEventBookingService>();
+builder.Services.AddTransient<IMovieEventBookingRepository, MovieEventBookingRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
