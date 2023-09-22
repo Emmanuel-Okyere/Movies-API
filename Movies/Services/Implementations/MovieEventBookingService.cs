@@ -11,25 +11,29 @@ public class MovieEventBookingService: IMovieEventBookingService
 {
     private readonly IMovieEventBookingRepository _movieEventBookingRepository;
     private readonly IMovieShowRepository _movieShowRepository;
-    private readonly ITicketRepository _ticketRepository;
+    private readonly ILogger<MovieEventBookingService> _logger;
 
-    public MovieEventBookingService(IMovieEventBookingRepository movieEventBookingRepository, IMovieShowRepository movieShowRepository, ITicketRepository ticketRepository)
+    public MovieEventBookingService(IMovieEventBookingRepository movieEventBookingRepository, IMovieShowRepository movieShowRepository, ITicketRepository ticketRepository, ILogger<MovieEventBookingService> logger)
     {
         _movieEventBookingRepository = movieEventBookingRepository;
         _movieShowRepository = movieShowRepository;
-        _ticketRepository = ticketRepository;
+        _logger = logger;
     }
 
     public async Task<MessageResponseDTO> CreateAMovieEventBooking(MovieEventBookingDto movieEventBookingDto)
     {
+        _logger.LogInformation("creating movie show booking for {} number of person(s) with email {}", 
+            movieEventBookingDto.NumberOfPersons,movieEventBookingDto.EmailAddress);
         var movieShow = await _movieShowRepository.GetMovieShowById(movieEventBookingDto.MovieEventId);
         if (movieShow == null)
         {
+            _logger.LogInformation("movie event booking failure, movie not found");
             throw new NotFound404Exception("movie event not found");
         }
 
         if (movieEventBookingDto.NumberOfPersons > movieShow.Tickets.NumberOfTicketsLeft)
         {
+            _logger.LogInformation("movie event booking failure, can't satisfy request, no more tickets");
             throw new Duplicate409Exception("ticket can't satisfy you ticket left: "+movieShow.Tickets.NumberOfTicketsLeft);
         }
 
@@ -47,6 +51,7 @@ public class MovieEventBookingService: IMovieEventBookingService
         movieShow.Tickets.NumberOfTicketsSold += movieEventBookingDto.NumberOfPersons;
         _movieEventBookingRepository.SaveChanges();
         _movieShowRepository.SaveChanges();
+        _logger.LogInformation("movie event booking success");
         return new MessageResponseDTO
         {
             message = "movie event book success",
@@ -56,17 +61,20 @@ public class MovieEventBookingService: IMovieEventBookingService
 
     public async Task<IEnumerable<MovieEventBooking>> GetAllBookings()
     {
+        _logger.LogInformation("fetching all bookings success");
         return await _movieEventBookingRepository.GetAllBookings();
     }
 
     public async Task<MovieEventBooking> GetBookingById(int id)
     {
+        _logger.LogInformation("getting booking with Id {}",id);
         var movieEventBooking = await _movieEventBookingRepository.GetBookingById(id);
         if (movieEventBooking == null)
         {
+            _logger.LogInformation("getting booking with Id {} failure, booking not found",id);
             throw new NotFound404Exception("movie event booking not found");
         }
-
+        _logger.LogInformation("getting booking with Id {} success",id);
         return movieEventBooking;
     }
 }
