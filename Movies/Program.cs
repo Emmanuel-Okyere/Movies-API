@@ -15,8 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(new ExceptionFilters());
-    options.Filters.Add(new Duplicate404NotFoundException());
+    options.Filters.Add(new NotFound404ExceptionFilters());
+    options.Filters.Add(new Duplicate409ConflictException());
 })
     .AddNewtonsoftJson(option =>
 {

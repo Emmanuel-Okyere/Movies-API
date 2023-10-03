@@ -4,7 +4,7 @@ using Movies.Exceptions;
 
 namespace Movies.Config;
 
-public class ExceptionFilters: IExceptionFilter
+public class NotFound404ExceptionFilters: IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
@@ -14,7 +14,7 @@ public class ExceptionFilters: IExceptionFilter
     }
 }
 
-public class Duplicate404NotFoundException : IExceptionFilter
+public class Duplicate409ConflictException : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
