@@ -42,14 +42,14 @@ public class MoviesRepository : IMoviesRepository
             .SingleOrDefaultAsync(a => a.Title == name);
     }
 
-    public void DeleteMovie(Movie movie)
+    public async Task DeleteMovie(Movie movie)
     {
         _dataContext.Movies.Remove(movie);
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     {
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 }

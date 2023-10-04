@@ -28,7 +28,6 @@ public class DataContext: DbContext
             .HasMany(m => m.MovieEventBookings)
             .WithOne(t => t.MovieShow)
             .IsRequired();
-        
     }
     
 }

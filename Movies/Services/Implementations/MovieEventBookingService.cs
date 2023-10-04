@@ -12,12 +12,13 @@ public class MovieEventBookingService: IMovieEventBookingService
     private readonly IMovieEventBookingRepository _movieEventBookingRepository;
     private readonly IMovieShowRepository _movieShowRepository;
     private readonly ILogger<MovieEventBookingService> _logger;
-
-    public MovieEventBookingService(IMovieEventBookingRepository movieEventBookingRepository, IMovieShowRepository movieShowRepository, ITicketRepository ticketRepository, ILogger<MovieEventBookingService> logger)
+    private readonly IEmailService _emailService;
+    public MovieEventBookingService(IMovieEventBookingRepository movieEventBookingRepository, IMovieShowRepository movieShowRepository, ITicketRepository ticketRepository, ILogger<MovieEventBookingService> logger, IEmailService emailService)
     {
         _movieEventBookingRepository = movieEventBookingRepository;
         _movieShowRepository = movieShowRepository;
         _logger = logger;
+        _emailService = emailService;
     }
 
     public async Task<MessageResponseDTO> CreateAMovieEventBooking(MovieEventBookingDto movieEventBookingDto)
@@ -49,9 +50,13 @@ public class MovieEventBookingService: IMovieEventBookingService
         var savedMovieEventBooking = await _movieEventBookingRepository.CreateAMovieEventBooking(movieBookingEvent);
         movieShow.MovieEventBookings.Add(savedMovieEventBooking);
         movieShow.Tickets.NumberOfTicketsSold += movieEventBookingDto.NumberOfPersons;
-        _movieEventBookingRepository.SaveChanges();
-        _movieShowRepository.SaveChanges();
+        await _movieEventBookingRepository.SaveChanges();
+        await _movieShowRepository.SaveChanges();
         _logger.LogInformation("movie event booking success");
+        var message = $"Dear {movieEventBookingDto.EmailAddress.Split("@")[0]},\n" +
+                      $" Movie Event Booked for {movieEventBookingDto.NumberOfPersons} person(s). \n" +
+                      $"Please do well to make payment to secure tickets";
+        _emailService.SendEmail("Movie Event Booking", movieEventBookingDto.EmailAddress,message);
         return new MessageResponseDTO
         {
             message = "movie event book success",

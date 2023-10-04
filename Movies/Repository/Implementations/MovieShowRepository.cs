@@ -41,15 +41,15 @@ public class MovieShowRepository: IMovieShowRepository
         return savedMovieShow.Entity;
     }
 
-    public void DeleteMovieShow(MovieShow movieShow)
+    public async Task DeleteMovieShow(MovieShow movieShow)
     {
         _dataContext.MovieShows.Remove(movieShow);
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     { 
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 
     public async Task<List<MovieShow>> GetAllMovieShowsOnTheSameTheatreStartTimeAndEndTime(int theatreId, DateTime startDateTime)

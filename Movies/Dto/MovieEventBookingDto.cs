@@ -4,7 +4,7 @@ namespace Movies.dto;
 
 public class MovieEventBookingDto
 {
-    [Required]
+    [Required,EmailAddress]
     public string? EmailAddress { get; set; }
     [Required]
     public int NumberOfPersons { get; set; }

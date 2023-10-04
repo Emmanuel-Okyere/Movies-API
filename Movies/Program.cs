@@ -43,6 +43,7 @@ builder.Services.AddTransient<IMovieShowRepository, MovieShowRepository>();
 builder.Services.AddTransient<ITicketRepository, TicketRepository>();
 builder.Services.AddTransient<IMovieEventBookingService, MovieEventBookingService>();
 builder.Services.AddTransient<IMovieEventBookingRepository, MovieEventBookingRepository>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
 

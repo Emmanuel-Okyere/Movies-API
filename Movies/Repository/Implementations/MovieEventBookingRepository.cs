@@ -38,8 +38,8 @@ public class MovieEventBookingRepository: IMovieEventBookingRepository
             .FirstOrDefaultAsync(a => a.Id== id);
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     {
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 }

@@ -32,10 +32,10 @@ public class TheatreRepository : ITheatreRepository
         return await _dataContext.Theatres.ToListAsync();
     }
 
-    public void DeleteTheatre(Theatre theatre)
+    public async Task DeleteTheatre(Theatre theatre)
     {
         _dataContext.Theatres.Remove(theatre);
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
     
     public async Task<Theatre?> GetTheatreByNameAndLocation(string name, string location)
@@ -45,9 +45,9 @@ public class TheatreRepository : ITheatreRepository
         return theatre;
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     {
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
     
 }

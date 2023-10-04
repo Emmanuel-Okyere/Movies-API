@@ -19,8 +19,8 @@ public class TicketRepository:ITicketRepository
         return savedTicket.Entity;
     }
 
-    public void saveChanges()
+    public async Task saveChanges()
     {
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 }

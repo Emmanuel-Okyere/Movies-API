@@ -5,5 +5,5 @@ namespace Movies.Repository;
 public interface ITicketRepository
 {
     Task<Ticket> CreateTicket(Ticket ticket);
-    void saveChanges();
+    Task saveChanges();
 }

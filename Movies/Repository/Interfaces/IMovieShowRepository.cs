@@ -8,6 +8,6 @@ public interface IMovieShowRepository
     Task<MovieShow?> GetMovieShowById(int id);
     Task<MovieShow?> CreateMovieShow(MovieShow? movieShow);
     Task<List<MovieShow>> GetAllMovieShowsOnTheSameTheatreStartTimeAndEndTime(int theatreId, DateTime startDateTime);
-    void DeleteMovieShow(MovieShow movieShow);
-    void SaveChanges();
+    Task DeleteMovieShow(MovieShow movieShow);
+    Task SaveChanges();
 }

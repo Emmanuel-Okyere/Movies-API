@@ -8,5 +8,5 @@ public interface IMovieEventBookingRepository
     Task<MovieEventBooking> CreateAMovieEventBooking(MovieEventBooking movieEventBooking);
     Task<IEnumerable<MovieEventBooking>> GetAllBookings();
     Task<MovieEventBooking?> GetBookingById(int id);
-    void SaveChanges();
+    Task SaveChanges();
 }

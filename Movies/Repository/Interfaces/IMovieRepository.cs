@@ -10,7 +10,7 @@ public interface IMoviesRepository
     Task<IEnumerable<Movie>> GetAllMovies();
     Task<Movie> AddMovie(Movie movie);
     Task<Movie?> GetMovieByName(string name);
-    void DeleteMovie(Movie movie);
-    void SaveChanges();
+    Task DeleteMovie(Movie movie);
+    Task SaveChanges();
 }
 

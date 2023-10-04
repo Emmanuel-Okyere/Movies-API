@@ -8,6 +8,6 @@ public interface IGenreRepository
     Task<Genre?> GetGenreById(int id);
     Task<Genre?> GetGenreByName(string name);
     Task<IEnumerable<Genre>> GetAllGenre();
-    void DeleteGenre(Genre genre);
-    void SaveChanges();
+    Task DeleteGenre(Genre genre);
+    Task SaveChanges();
 }

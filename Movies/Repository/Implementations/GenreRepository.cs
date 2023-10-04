@@ -37,14 +37,14 @@ public class GenreRepository: IGenreRepository
         return await _context.Genres.ToListAsync();
     }
 
-    public void DeleteGenre(Genre genre)
+    public async Task DeleteGenre(Genre genre)
     {
         _context.Genres.Remove(genre);
-        _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
-    public void SaveChanges()
+    public async Task SaveChanges()
     {
-        _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }

@@ -8,7 +8,7 @@ public interface ITheatreRepository
     Task<Theatre> AddTheatre(Theatre theatre);
     Task<IEnumerable<Theatre>> GetAllTheatres();
     Task<Theatre?> GetTheatreByNameAndLocation(string name, string location);
-    void SaveChanges();
-    void DeleteTheatre(Theatre theatre);
+    Task SaveChanges();
+    Task DeleteTheatre(Theatre theatre);
 
 }
