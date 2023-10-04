@@ -55,7 +55,8 @@ public class MovieEventBookingService: IMovieEventBookingService
         _logger.LogInformation("movie event booking success");
         var message = $"Dear {movieEventBookingDto.EmailAddress.Split("@")[0]},\n" +
                       $" Movie Event Booked for {movieEventBookingDto.NumberOfPersons} person(s). \n" +
-                      $"Please do well to make payment to secure tickets";
+                      $"Please do well to make payment to secure tickets. Payment Reference Is: {savedMovieEventBooking.Id}. " +
+                      $"Please use this reference when making the payment.";
         _emailService.SendEmail("Movie Event Booking", movieEventBookingDto.EmailAddress,message);
         return new MessageResponseDTO
         {
