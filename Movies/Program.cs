@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Movies.Config;
 using Movies.Data;
-using Movies.Model;
 using Movies.Repository;
 using Movies.Repository.Implementations;
 using Movies.Repository.Interfaces;
