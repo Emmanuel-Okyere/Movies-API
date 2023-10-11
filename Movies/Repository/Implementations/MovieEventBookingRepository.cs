@@ -42,4 +42,12 @@ public class MovieEventBookingRepository: IMovieEventBookingRepository
     {
         await _dataContext.SaveChangesAsync();
     }
+
+    public async Task<List<MovieEventBooking>> GetBookingsByEmail(string emailAddress)
+    {
+        return await _dataContext.MovieEventBookings
+            .Include(a=>a.MovieShow.Movie)
+            .Where(a => a.EmailAddress == emailAddress)
+            .ToListAsync();
+    }
 }

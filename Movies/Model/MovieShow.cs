@@ -23,6 +23,7 @@ public class MovieShow
     public string? ShowDescription { get; set; }
     [Required]
     public Ticket? Tickets { get; set; }
+    [JsonIgnore]
     public List<MovieEventBooking?> MovieEventBookings { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }

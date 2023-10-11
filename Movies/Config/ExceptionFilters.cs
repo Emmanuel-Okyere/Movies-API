@@ -24,3 +24,12 @@ public class Duplicate409ConflictException : IExceptionFilter
     }
 }
 
+public class BadRequest400BadException : IExceptionFilter
+{
+    public void OnException(ExceptionContext context)
+    {
+        if(context.Exception is not BadRequest400Exception) return;
+        context.Result = new BadRequestObjectResult(context.Exception.Message);
+        context.ExceptionHandled = true;
+    }
+}

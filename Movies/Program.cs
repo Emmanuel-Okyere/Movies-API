@@ -17,6 +17,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new NotFound404ExceptionFilters());
     options.Filters.Add(new Duplicate409ConflictException());
+    options.Filters.Add(new BadRequest400BadException());
 })
     .AddNewtonsoftJson(option =>
 {
@@ -44,6 +45,7 @@ builder.Services.AddTransient<ITicketRepository, TicketRepository>();
 builder.Services.AddTransient<IMovieEventBookingService, MovieEventBookingService>();
 builder.Services.AddTransient<IMovieEventBookingRepository, MovieEventBookingRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
 
 var app = builder.Build();
 

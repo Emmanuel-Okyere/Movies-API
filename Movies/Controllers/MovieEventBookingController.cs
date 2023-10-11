@@ -22,7 +22,7 @@ public class MovieEventBookingController: ControllerBase
         return Created("", await _movieEventBookingService.CreateAMovieEventBooking(movieEventBookingDto));
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllBookings()
     {
@@ -35,5 +35,11 @@ public class MovieEventBookingController: ControllerBase
     public async Task<IActionResult> GetBookingsById(int id)
     {
         return Ok(await _movieEventBookingService.GetBookingById(id));
+    }
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBookingsByEmail([FromQuery] string emailAddress)
+    {
+        return Ok(await _movieEventBookingService.GetBookingsByEmail(emailAddress));
     }
 }

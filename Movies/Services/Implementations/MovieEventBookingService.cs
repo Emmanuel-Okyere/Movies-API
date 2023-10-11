@@ -53,7 +53,7 @@ public class MovieEventBookingService: IMovieEventBookingService
         await _movieEventBookingRepository.SaveChanges();
         await _movieShowRepository.SaveChanges();
         _logger.LogInformation("movie event booking success");
-        var message = $"Dear {movieEventBookingDto.EmailAddress.Split("@")[0]},\n" +
+        var message = $"Dear {movieEventBookingDto.EmailAddress!.Split("@")[0]},\n" +
                       $" Movie Event Booked for {movieEventBookingDto.NumberOfPersons} person(s). \n" +
                       $"Please do well to make payment to secure tickets. Payment Reference Is: {savedMovieEventBooking.Id}. " +
                       $"Please use this reference when making the payment.";
@@ -82,5 +82,10 @@ public class MovieEventBookingService: IMovieEventBookingService
         }
         _logger.LogInformation("getting booking with Id {} success",id);
         return movieEventBooking;
+    }
+
+    public async Task<List<MovieEventBooking>> GetBookingsByEmail(string emailAddress)
+    {
+        return await _movieEventBookingRepository.GetBookingsByEmail(emailAddress);
     }
 }

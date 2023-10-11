@@ -9,4 +9,5 @@ public interface IMovieEventBookingRepository
     Task<IEnumerable<MovieEventBooking>> GetAllBookings();
     Task<MovieEventBooking?> GetBookingById(int id);
     Task SaveChanges();
+    Task<List<MovieEventBooking>> GetBookingsByEmail(string emailAddress);
 }
